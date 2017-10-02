@@ -1,9 +1,10 @@
 import requests
 import random
 import xml.etree.ElementTree as ET
-from tkinter import *
-from tkinter import ttk
-from tkinter.font import Font
+from kivy.app import App
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+
 
 total = ""
 origin = ""
@@ -38,49 +39,6 @@ def getInfo(index): #gets info on the word from webster api
     root = ET.fromstring(xml)  #uses element tree library to convert xml into searchable tree
     return root
 
-def gui(word, pr, wt, origin):
-
-    def calculate(*args):
-        try:
-            value = float(feet.get())
-            meters.set((0.3048 * value * 10000.0 + 0.5)/10000.0)
-        except ValueError:
-            pass
-
-    root = Tk()
-    root.title("Maddie's App")
-    mainframe = ttk.Frame(root, padding="3 3 12 12")
-    mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
-    mainframe.columnconfigure(0, weight=1)
-    mainframe.rowconfigure(0, weight=1)
-
-    feet = StringVar()
-    meters = StringVar()
-    feet_entry = ttk.Entry(mainframe, width=7, textvariable=feet)
-    feet_entry.grid(column=2, row=1, sticky=(W, E))
-    ttk.Label(mainframe, textvariable=meters).grid(column=2, row=2, sticky=(W, E))
-    ttk.Button(mainframe, text="Calculate", command=calculate).grid(column=3, row=3, sticky=W)
-
-    ttk.Label(mainframe, text="feet").grid(column=3, row=1, sticky=W)
-    ttk.Label(mainframe, text="is equivalent to").grid(column=1, row=2, sticky=E)
-    ttk.Label(mainframe, text="meters").grid(column=3, row=2, sticky=W)
-
-    for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
-    feet_entry.focus()
-    root.bind('<Return>', calculate)
-
-
-    #statusText = StringVar(root)
-    #statusText.set(origin)
-
-    #ttk.Label(mainframe, text="WORD OF THE DAY")
-    #label.pack()
-
-    #bold_font = Font(family="Helvetica", size=14, weight="bold")
-    #message = Label(root, textvariable=statusText, font = bold_font)
-    #message.pack()
-
-    root.mainloop()
 
 #if no entry file exists, or if the entry is a location, get a new word and its merriam-webster info
 while((entry is None) or entry.find('fl').text == "geographical name" or entry.find('fl').text == "biographical name" or entry.find('fl').text == "abbreviation"): #(entry is None) or
@@ -109,5 +67,12 @@ total += "\nDefinition:"#print "Definition:"
 #print "".join(defs.itertext())
 for count, dt in enumerate(defs.iter('dt'), start = 1): #iterate through all dt's(definitions) in defs
     total += "\n{}{}".format(count, "".join(dt.itertext()))#print "{}{}".format(count, "".join(dt.itertext())) #"".join(dt.itertext()) makes sure all branches within dt are also printed
-#print(total)
-gui(word, pr, wt, origin)
+print(total)
+#gui(word, pr, wt, origin)
+
+class TestApp(App):
+    def build(self):
+        #l = Label(text=total)
+        return Label(text=total)
+
+TestApp().run()
