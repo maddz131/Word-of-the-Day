@@ -4,6 +4,10 @@ import xml.etree.ElementTree as ET
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.relativelayout import RelativeLayout
+from kivy.graphics import Rectangle, Color
+
 
 
 total = ""
@@ -39,40 +43,67 @@ def getInfo(index): #gets info on the word from webster api
     root = ET.fromstring(xml)  #uses element tree library to convert xml into searchable tree
     return root
 
+def mainfunction(total,origin,entry):
+    #if no entry file exists, or if the entry is a location, get a new word and its merriam-webster info
+    while(entry is None or entry.find('fl').text == "geographical name" or entry.find('fl').text == "biographical name" or entry.find('fl').text == "abbreviation"): #(entry is None) or
+        index = getWord(length)  #gets a index of random acceptable word from the file and assigns it to index
+        root = getInfo(index)    #gets xml tree of chosen word (found using index)
+        entry = root.find('entry')    #'entry' branch of xml tree contains all other branches, so I dont have to write root.find('entry').find('pr')
 
-#if no entry file exists, or if the entry is a location, get a new word and its merriam-webster info
-while((entry is None) or entry.find('fl').text == "geographical name" or entry.find('fl').text == "biographical name" or entry.find('fl').text == "abbreviation"): #(entry is None) or
-    index = getWord(length)  #gets a index of random acceptable word from the file and assigns it to index
-    root = getInfo(index)    #gets xml tree of chosen word (found using index)
-    entry = root.find('entry')    #'entry' branch of xml tree contains all other branches, so I dont have to write root.find('entry').find('pr')
+    #print fields
+    word = entry.find('ew').text
+    total +=  "\nWord: " + word#print("\nWord: " + word)
 
-#print fields
-word = entry.find('ew').text
-total +=  "\nWord: " + word#print("\nWord: " + word)
+    if entry.find('pr') is not None:
+        pr = entry.find('pr').text
+        prlabel = "\nPronunciation: " #print("Pronunciation: " +  pr)
 
-if entry.find('pr') is not None:
-    pr = entry.find('pr').text
-    prlabel = "\nPronunciation: " #print("Pronunciation: " +  pr)
+    if entry.find('fl') is not None:
+        wt = entry.find('fl').text
+        total += "\nWord Type: " +  wt#print("Word Type: " +  wt)
 
-if entry.find('fl') is not None:
-    wt = entry.find('fl').text
-    total += "\nWord Type: " +  wt#print("Word Type: " +  wt)
+    if entry.find('et') is not None:
+        origin = entry.find('et').text
+        total += "\nOrigin: " + str(origin)#print("Origin: " + str(origin))
 
-if entry.find('et') is not None:
-    origin = entry.find('et').text
-    total += "\nOrigin: " + str(origin)#print("Origin: " + str(origin))
+    defs = entry.find('def')
+    total += "\nDefinition:"#print "Definition:"
+    #print "".join(defs.itertext())
+    for count, dt in enumerate(defs.iter('dt'), start = 1): #iterate through all dt's(definitions) in defs
+        total += "\n{}{}".format(count, "".join(dt.itertext()))#print "{}{}".format(count, "".join(dt.itertext())) #"".join(dt.itertext()) makes sure all branches within dt are also printed
+    return total
+    #gui(word, pr, wt, origin)
 
-defs = entry.find('def')
-total += "\nDefinition:"#print "Definition:"
-#print "".join(defs.itertext())
-for count, dt in enumerate(defs.iter('dt'), start = 1): #iterate through all dt's(definitions) in defs
-    total += "\n{}{}".format(count, "".join(dt.itertext()))#print "{}{}".format(count, "".join(dt.itertext())) #"".join(dt.itertext()) makes sure all branches within dt are also printed
-print(total)
-#gui(word, pr, wt, origin)
+class Hello(RelativeLayout):
+    def __init__(self,**kwargs):
+        super(Hello,self).__init__(**kwargs)
+        #self.l = Label(text=mainfunction(total,origin,entry),text_size=(None,None),
+        #                      font_size="20sp",
+        #                      pos_hint={'center_x': 0.5, 'center_y': .85},
+        #                      size_hint_y=None,
+        #                      height=self.texture_size[1],
+        #                      halign="center",
+        #                      valign = "middle",
+        #                      color=(0.055, 0.235, 0.541, 1))
+        self.l = Label(text=mainfunction(total,origin,entry))
+        self.b = Button(text = "Next", size_hint=(.3, .1), on_press=self.update)
+        self.add_widget(self.l)
+        self.add_widget(self.b)
+    def update(self,event):
+        self.l.text = mainfunction(total,origin,entry)
 
-class TestApp(App):
+class WordApp(App):
     def build(self):
-        #l = Label(text=total)
-        return Label(text=total)
+        return Hello()
+        #l = Label(text=mainfunction(total,origin,entry))
+        #b = Button(text = "Next")
+        #b.bind(on_press=self.update)
+        #layout = BoxLayout(orientation='vertical')
+        #layout.add_widget(l)
+        #layout.add_widget(b)
+        #return layout
 
-TestApp().run()
+    #def update():
+    #    l.text = mainfunction(total,origin,entry)
+
+WordApp().run()
