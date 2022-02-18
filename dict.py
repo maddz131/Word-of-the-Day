@@ -54,7 +54,7 @@ def generateWordAndDefenition():
                 definitions_list  = [parseInfo(word_info[0])]
 
         if not definitions_list:    #if the chosen word didn't have a usable definition, get another
-            word_with_definitions = getDefinition()
+            word_with_definitions = generateWordAndDefenition()
         else:
             word_with_definitions.append(definitions_list)
             print(word_with_definitions)
