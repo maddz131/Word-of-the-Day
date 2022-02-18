@@ -27,10 +27,8 @@ def parseInfo(word_entry):
     except Exception as e:
         definitions.append('No Class Type Specified')
         print("KeyError: fl")
-
     for index, definition in enumerate(word_entry['shortdef']):
         definition_dict[index+1] = definition
-
     definitions.append(definition_dict)
     return(definitions)
 
@@ -52,19 +50,16 @@ def generateWordAndDefenition():
             print(word_info)
             if word_info[0].get('shortdef'):
                 definitions_list  = [parseInfo(word_info[0])]
-
         if not definitions_list:    #if the chosen word didn't have a usable definition, get another
             word_with_definitions = generateWordAndDefenition()
         else:
             word_with_definitions.append(definitions_list)
             print(word_with_definitions)
-
     return word_with_definitions
 
 def formatDefinitions(class_definitions):
     formatted_definitions = ''
     label = ['a','b','c','d','e','f','g','h','i'] #not ideal, but assumes there will be no more than 9 definitions per class
-
     for index, definition in enumerate(class_definitions):
         formatted_definitions += "{}) ".format(label[index])
         longtext = textwrap.wrap(class_definitions[definition], 80)
@@ -79,14 +74,11 @@ def main():
                 [sg.Text(key = '_text2_', visible = False)],
                 [sg.Button('Generate Word'), sg.Exit()] ]
     layout = [[sg.Column(column1, size = (600,500))]]
-
     window = sg.Window("Word of the Day", layout, finalize = True) # Create the window
-
     while True:
         event, values = window.read()
         if event == "Exit" or event == sg.WIN_CLOSED: # End program if user closes window or presses the Exit button
             break
-
         if event == "Generate Word":
             word_definition = generateWordAndDefenition()
             text1 = word_definition[0] #the word
