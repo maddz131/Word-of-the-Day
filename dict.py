@@ -39,12 +39,12 @@ def generateWordAndDefenition():
     chosen_word = getWord(advanced_words, common_words, len(advanced_words))
     print(chosen_word)
     word_info = getDefinition(chosen_word)
-    if not any(isinstance(info, dict) for info in word_info): #if the api response isn't a dictionary, that means it could find the word and we need a new one
+    if not any(isinstance(info, dict) for info in word_info): #if the api response isn't a dictionary, that means it couldn't find the word and we need a new one
         word_with_definitions = generateWordAndDefenition()
     else:
         word_with_definitions = [chosen_word]
         definitions_list = []
-        if 'hom' in word_info[0]: #if there are multiple hominims print them, otherwise just print the main definition
+        if 'hom' in word_info[0]: #if there are multiple homonym print them, otherwise just print the main definition
             definitions_list = [parseInfo(entry) for entry in word_info if entry.get('shortdef') and entry.get('hom')] #.get() checks that the hom and shortdef 1) exist and 2) are not null
         else:
             print(word_info)
@@ -66,7 +66,6 @@ def formatDefinitions(class_definitions):
         for text in longtext:
             formatted_definitions += "{} \n".format(text)
     return formatted_definitions
-
 
 #PROGRAM STARTING POINT
 def main():
