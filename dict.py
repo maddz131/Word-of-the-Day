@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
 ''' 
 Note:
-    An example of a word_definition is:
+    An example of a word.definitions is:
     [
         ['verb', {1: 'to accelerate the growth or progress of', 2: 'to bring or move forward', 3: 'to raise to a higher rank'}],
         ['noun', {1: 'a moving forward', 2: 'progress in development', 3: 'a progressive step : improvement'}],
@@ -106,10 +106,10 @@ Note:
 
     Each word can have many classes (verb, noun, adjective, etc.) and each class is in it's own list along with it's corresponding definition(s).
     So each word list has:
-        - word_definition[0]: a string of the word
-        - word_definition[1]: a list made up of n number of lists (word_definition[1][n], one list per each class that the word has)
-    Word_definition[1][n] is a list containing two elements:
-        - word_definition[1][n][0]: a string specifying the class (verb, adj, noun, etc.) 
-        - word_definition[1][n][1]: a dictionary of the definitions, because a single class can still have multiple definitions.
+        - word.name: a string of the word
+        - word.definitions: a list made up of n number of lists (word_definition[1][n], one list per each class that the word has)
+    Word.definitions[n] is a list containing two elements:
+        - word.definition[n][0]: a string specifying the class (verb, adj, noun, etc.) 
+        - word.definition[n][1]: a dictionary of the definitions for the class, because a single class can still have multiple definitions.
           The key is the definition number and the value is the defintition
 '''
