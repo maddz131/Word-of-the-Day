@@ -3,6 +3,7 @@ import random
 import PySimpleGUI as sg
 import json
 import textwrap
+from string import ascii_lowercase
 
 class Word:
     def __init__(self, name):
@@ -61,9 +62,8 @@ def generateWordAndDefenition():
 
 def formatDefinitions(class_definitions):
     formatted_definitions = ''
-    label = ['a','b','c','d','e','f','g','h','i'] #not ideal, but assumes there will be no more than 9 definitions per class
     for index, definition in enumerate(class_definitions):
-        formatted_definitions += "{}) ".format(label[index])
+        formatted_definitions += "{}) ".format(ascii_lowercase[index])
         longtext = textwrap.wrap(class_definitions[definition], 80)
         for text in longtext:
             formatted_definitions += "{} \n".format(text)
