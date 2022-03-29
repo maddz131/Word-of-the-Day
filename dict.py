@@ -26,19 +26,19 @@ def getDefinition(word):
     return json.loads(apiResponse.content)
 
 def parseInfo(word_entry):
+    word_dict = {}
     definition_dict = {}
-    definitions = []
     print(word_entry)
     try:
-        definitions.append(word_entry['fl'])  #fl is the functional label aka class of the word
+        word_dict['class'] = word_entry['fl']  #fl is the functional label aka class of the word
         print(word_entry['fl'])
     except Exception as e:
-        definitions.append('No Class Type Specified')
+        word_dict['class'] = 'No Class Type Specified'
         print("KeyError: fl")
     for index, definition in enumerate(word_entry['shortdef']):
         definition_dict[index+1] = definition
-    definitions.append(definition_dict)
-    return(definitions)
+    word_dict['definition'] = definition_dict
+    return(word_dict)
 
 def generateWordAndDefenition():
     chosen_word = getWord()
@@ -88,7 +88,7 @@ def main():
             for i in range(len(word.definitions)): #word_definition[1]
                 if len(word.definitions)>1:
                     classNum = f'{i+1}: '
-                text2 += (f'{classNum}{word.definitions[i][0]}\n{formatDefinitions(word.definitions[i][1])}\n\n')
+                text2 += (f'{classNum}{word.definitions[i]["class"]}\n{formatDefinitions(word.definitions[i]["definition"])}\n\n')
             window['_intro_'].update(text1)
             window['_text2_'].update(text2, visible = True)
 
@@ -97,19 +97,19 @@ if __name__ == "__main__":
 
 ''' 
 Note:
-    An example of a word.definitions is:
+    An example of word.definitions is:
     [
-        ['verb', {1: 'to accelerate the growth or progress of', 2: 'to bring or move forward', 3: 'to raise to a higher rank'}],
-        ['noun', {1: 'a moving forward', 2: 'progress in development', 3: 'a progressive step : improvement'}],
-        ['adjective', {1: 'made, sent, or furnished ahead of time', 2: 'going or situated before'}]
+        { class: 'verb', definition: {1: 'to accelerate the growth or progress of', 2: 'to bring or move forward', 3: 'to raise to a higher rank'}},
+        { class: 'noun',  definition: {1: 'a moving forward', 2: 'progress in development', 3: 'a progressive step : improvement'}},
+        { class: 'adjective',  definition: {1: 'made, sent, or furnished ahead of time', 2: 'going or situated before'}}
     ]
 
     Each word can have many classes (verb, noun, adjective, etc.) and each class is in it's own list along with it's corresponding definition(s).
     So each word list has:
         - word.name: a string of the word
         - word.definitions: a list made up of n number of lists (word_definition[1][n], one list per each class that the word has)
-    Word.definitions[n] is a list containing two elements:
-        - word.definition[n][0]: a string specifying the class (verb, adj, noun, etc.) 
-        - word.definition[n][1]: a dictionary of the definitions for the class, because a single class can still have multiple definitions.
+    Word.definitions[n] is a list of dictionaries each containing two keys:
+        - word.definition[n]["class"]: a string specifying the class (verb, adj, noun, etc.) 
+        - word.definition[n]["definition"]: a dictionary of the definitions for the class, because a single class can still have multiple definitions.
           The key is the definition number and the value is the defintition
 '''
