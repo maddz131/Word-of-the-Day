@@ -85,7 +85,7 @@ def main():
             text1 = word.name #the word
             text2 = '' #the definition
             classNum = '' #for words with multiple classes (nouns, adjectives, etc.)
-            for i in range(len(word.definitions)): #word_definition[1]
+            for i in range(len(word.definitions)):
                 if len(word.definitions)>1:
                     classNum = f'{i+1}: '
                 text2 += (f'{classNum}{word.definitions[i]["class"]}\n{formatDefinitions(word.definitions[i]["definition"])}\n\n')
@@ -107,9 +107,6 @@ Note:
     Each word can have many classes (verb, noun, adjective, etc.) and each class is in it's own list along with it's corresponding definition(s).
     So each word list has:
         - word.name: a string of the word
-        - word.definitions: a list made up of n number of lists (word_definition[1][n], one list per each class that the word has)
-    Word.definitions[n] is a list of dictionaries each containing two keys:
-        - word.definition[n]["class"]: a string specifying the class (verb, adj, noun, etc.) 
-        - word.definition[n]["definition"]: a dictionary of the definitions for the class, because a single class can still have multiple definitions.
-          The key is the definition number and the value is the defintition
+        - word.definitions: a list made up of n dictionaries, n being the number of classes the word has
+            - since each class can also have multiple definitions, the value of the 'definition' key is another dictionary
 '''
