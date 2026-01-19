@@ -19,3 +19,5 @@ Experimenting with python and the Merriam-Webster Dictionary API to generate a r
    ```bash
    python dict.py
    ```
+
+<img width="617" height="489" alt="Screenshot 2026-01-19 123829" src="https://github.com/user-attachments/assets/ae2741be-fccb-46c6-a077-131fe62ba854" />
