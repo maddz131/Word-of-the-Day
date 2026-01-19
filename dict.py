@@ -1,9 +1,8 @@
 import requests
 import random
 import tkinter as tk
-from tkinter import ttk, scrolledtext, messagebox
+from tkinter import ttk, scrolledtext
 import textwrap
-import sys
 import os
 from ttkthemes import ThemedTk
 from string import ascii_lowercase
